@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id         Int      @id @default(autoincrement())
+  admin_name String
+  email      String   @unique
+  password   String
+  mobile     String?
+  created_at DateTime @default(now())
+  User       User[]
+}
+
+model Product {
+  id           Int        @id @default(autoincrement())
+  product_name String
+  quantity     Int
+  price        Int
+  created_at   DateTime   @default(now())
+  Wishlist     Wishlist[]
+  Cart         Cart[]
+}
+
+model User {
+  id             Int        @id @default(autoincrement())
+  name           String
+  email          String     @unique
+  password       String
+  mobile         String?
+  shping_address String
+  Wishlist       Wishlist[]
+  added_by       Admin      @relation(fields: [admin_id], references: [id], onDelete: Cascade)
+  admin_id       Int
+  created_at     DateTime   @default(now())
+  Cart           Cart[]
+}
+
+model Wishlist {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id    Int
+  product    Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  product_id Int
+  created_at DateTime @default(now())
+}
+
+model Cart {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id    Int
+  product    Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  product_id Int
+  quantity   Int      @default(1)
+  created_at DateTime @default(now())
+}
