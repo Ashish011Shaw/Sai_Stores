@@ -21,13 +21,14 @@ model Admin {
 }
 
 model Product {
-  id           Int        @id @default(autoincrement())
-  product_name String
-  quantity     Int
-  price        Int
-  created_at   DateTime   @default(now())
-  Wishlist     Wishlist[]
-  Cart         Cart[]
+  id             Int              @id @default(autoincrement())
+  product_name   String
+  quantity       Int
+  price          Int
+  created_at     DateTime         @default(now())
+  Wishlist       Wishlist[]
+  Cart           Cart[]
+  OrderedProduct OrderedProduct[]
 }
 
 model User {
@@ -42,6 +43,7 @@ model User {
   admin_id       Int
   created_at     DateTime   @default(now())
   Cart           Cart[]
+  Order          Order[]
 }
 
 model Wishlist {
@@ -60,5 +62,25 @@ model Cart {
   product    Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
   product_id Int
   quantity   Int      @default(1)
+  created_at DateTime @default(now())
+}
+
+model Order {
+  id              Int              @id @default(autoincrement())
+  user            User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id         Int
+  total_price     Int
+  created_at      DateTime         @default(now())
+  OrderedProducts OrderedProduct[]
+}
+
+model OrderedProduct {
+  id         Int      @id @default(autoincrement())
+  order      Order    @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  order_id   Int
+  product    Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  product_id Int
+  quantity   Int      @default(1)
+  price      Int
   created_at DateTime @default(now())
 }

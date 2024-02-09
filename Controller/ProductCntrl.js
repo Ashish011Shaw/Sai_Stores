@@ -31,6 +31,36 @@ const addProduct = async (req, h) => {
     }
 };
 
+// delete a product
+const deleteSingleProduct = async (req, h) => {
+    try {
+        const adminId = req.adminId;
+        if (!adminId) {
+            return h.response({ succcess: false, message: "You are not an admin" }).code(404);
+        }
+        const { id } = req.params;
+        const checkProduct = await prisma.product.findFirst({
+            where: {
+                id: Number(id),
+            }
+        });
+        if (!checkProduct) {
+            return h.response({ succcess: false, message: "YProduct not found" }).code(404);
+        } else {
+            const deleteProductById = await prisma.product.delete({
+                where: {
+                    id: Number(id),
+                }
+            });
+            return h.response({ succcess: true, message: "Product deleted successfully" }).code(200);
+        }
+    } catch (error) {
+        console.log(error);
+        return h.response({ message: "Error deleting Product", error }).code(500);
+
+    }
+}
+
 // get products 
 const getProducts = async (req, h) => {
     try {
@@ -58,6 +88,7 @@ const getSingleProductById = async (req, h) => {
         return h.response({ message: "Error getting Product by it's Id" }).code(500);
     }
 }
+
 
 // update product
 const updateProduct = async (req, h) => {
@@ -99,5 +130,6 @@ module.exports = {
     addProduct,
     getProducts,
     getSingleProductById,
-    updateProduct
+    updateProduct,
+    deleteSingleProduct
 }

@@ -28,4 +28,12 @@ module.exports = [
             handler: controller.updateProduct
         },
     },
+    {
+        method: 'DELETE',
+        path: '/delete-product/{id}',
+        options: {
+            pre: [Authentication],
+            handler: controller.deleteSingleProduct
+        },
+    },
 ]

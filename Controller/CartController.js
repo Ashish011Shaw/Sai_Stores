@@ -36,7 +36,6 @@ const addToCart = async (req, h) => {
                 });
                 return h.response({ status: 201, message: "Product added to cart successfully!", data: cartData }).code(201)
             }
-
         }
     } catch (error) {
         console.log(error)
@@ -127,18 +126,30 @@ const decreaseQuantity = async (req, h) => {
                 product_id: Number(id),
             }
         });
+        // console.log(checkProductById)
         if (!checkProductById) {
             return h.response({ status: 404, message: "Product not found in your cart" }).code(404);
         } else {
-            const decreaseQuantity = await prisma.cart.update({
-                where: {
-                    id: Number(checkProductById.id),
-                },
-                data: {
-                    quantity: Number(checkProductById.quantity) - 1
-                }
-            });
-            return h.response({ status: 200, message: "Product quantity decreased successfully!", data: decreaseQuantity }).code(200)
+            // if item = 1 thn remove it from cart
+            if (checkProductById.quantity === 1) {
+                const removeFromCart = await prisma.cart.delete({
+                    where: {
+                        id: Number(checkProductById.id),
+                    }
+                });
+                return h.response({ status: 200, message: "Product removed from cart successfully!" }).code(200)
+            } else {
+                const decreaseQuantity = await prisma.cart.update({
+                    where: {
+                        id: Number(checkProductById.id),
+                    },
+                    data: {
+                        quantity: Number(checkProductById.quantity) - 1
+                    }
+                });
+                return h.response({ status: 200, message: "Product quantity decreased successfully!", data: decreaseQuantity }).code(200);
+
+            }
         }
     } catch (error) {
         console.log(error);

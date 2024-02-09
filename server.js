@@ -7,6 +7,8 @@ const productRoute = require("./Routes/ProductROute")
 const userRoute = require("./Routes/UserROute")
 const wishListRoute = require("./Routes/WishListRoute")
 const cartRouter = require("./Routes/CartRoute")
+const orderRouter = require("./Routes/OrderRoute")
+
 
 
 // dotenv 
@@ -34,6 +36,8 @@ const init = async () => {
     await server.route(userRoute);
     await server.route(wishListRoute);
     await server.route(cartRouter);
+    await server.route(orderRouter);
+
 
 
 };
