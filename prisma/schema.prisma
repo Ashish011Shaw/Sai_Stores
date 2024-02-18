@@ -84,3 +84,11 @@ model OrderedProduct {
   price      Int
   created_at DateTime @default(now())
 }
+
+// Catagory
+model Catagory {
+  id           Int       @id @default(autoincrement())
+  catagoryName String
+  created_at   DateTime  @default(now())
+  updated_at   DateTime? @default(now()) @updatedAt
+}
